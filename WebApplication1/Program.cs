@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.group;
 using WebApplication1.idol;
 using WebApplication1.shared.infrastructure;
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 
 builder.Services.AddScoped<AppDbContext>();
 builder.Services.AddScoped<IdolService>();
+builder.Services.AddScoped<GroupService>();
 
 var app = builder.Build();
 

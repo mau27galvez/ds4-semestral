@@ -12,6 +12,7 @@ public class IdolService(AppDbContext appDbContext)
         var idols = await _appDbContext.Idols.ToListAsync();
         var idolsResponse = idols.Select(idol => new IdolResponse(
             idol.Id.ToString(),
+            idol.GroupId.ToString(),
             idol.Name,
             idol.RealName,
             idol.Photo
@@ -23,6 +24,7 @@ public class IdolService(AppDbContext appDbContext)
 
 public record IdolResponse(
     string Id,
+    string GroupId,
     string Name,
     string RealName,
     string Photo
