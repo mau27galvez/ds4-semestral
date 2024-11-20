@@ -20,6 +20,20 @@ public class IdolService(AppDbContext appDbContext)
 
         return idolsResponse;
     }
+
+    public async Task<IEnumerable<IdolResponse>> GetIdolsByGroupId(Guid groupId)
+    {
+        var idols = await _appDbContext.Idols.Where(idol => idol.GroupId == groupId).ToListAsync();
+        var idolsResponse = idols.Select(idol => new IdolResponse(
+            idol.Id.ToString(),
+            idol.GroupId.ToString(),
+            idol.Name,
+            idol.RealName,
+            idol.Photo
+        )).ToList();
+
+        return idolsResponse;
+    }
 }
 
 public record IdolResponse(

@@ -13,4 +13,10 @@ public class IdolController(IdolService idolService) : ControllerBase
     {
         return await _idolService.GetIdols();
     }
+
+    [HttpGet("{groupId:guid}", Name = "GetIdolsByGroupId")]
+    public async Task<IEnumerable<IdolResponse>> GetByGroupId(Guid groupId)
+    {
+        return await _idolService.GetIdolsByGroupId(groupId);
+    }
 }
