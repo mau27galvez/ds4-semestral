@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using WebApplication1.group;
 using WebApplication1.idol;
+using WebApplication1.user;
 
 namespace WebApplication1.shared.infrastructure;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
  public DbSet<Idol> Idols { get; init; }
  public DbSet<Group> Groups { get; init; }
@@ -20,6 +22,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
  protected override void OnModelCreating(ModelBuilder modelBuilder)
  {
+  base.OnModelCreating(modelBuilder);
+
+  modelBuilder.Entity<User>(entity =>
+  {
+   entity.Property(e => e.Initials).HasMaxLength(5);
+  });
+
+  modelBuilder.HasDefaultSchema("identity");
+
   var aespaId = Guid.NewGuid();
   var newJeansId = Guid.NewGuid();
 
