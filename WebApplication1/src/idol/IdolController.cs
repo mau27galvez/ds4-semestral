@@ -6,17 +6,15 @@ namespace WebApplication1.idol;
 [Route("[controller]")]
 public class IdolController(IdolService idolService) : ControllerBase
 {
-    private readonly IdolService _idolService = idolService;
-
     [HttpGet(Name = "GetIdols")]
     public async Task<IEnumerable<IdolResponse>> Get()
     {
-        return await _idolService.GetIdols();
+        return await idolService.GetIdols();
     }
 
-    [HttpGet("{groupId:guid}", Name = "GetIdolsByGroupId")]
+    [HttpGet("{groupId:guid}", Name = "GetCommentsByGroupId")]
     public async Task<IEnumerable<IdolResponse>> GetByGroupId(Guid groupId)
     {
-        return await _idolService.GetIdolsByGroupId(groupId);
+        return await idolService.GetIdolsByGroupId(groupId);
     }
 }

@@ -5,11 +5,9 @@ namespace WebApplication1.group;
 
 public class GroupService(AppDbContext appDbContext)
 {
-    private readonly AppDbContext _appDbContext = appDbContext;
-
     public async Task<IEnumerable<GroupResponse>> GetGroups()
     {
-        var groups = await _appDbContext.Groups.ToListAsync();
+        var groups = await appDbContext.Groups.ToListAsync();
         var groupsResponse = groups.Select(group => new GroupResponse(
             group.Id.ToString(),
             group.Name,

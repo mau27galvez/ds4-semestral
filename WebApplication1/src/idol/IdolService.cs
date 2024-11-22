@@ -5,11 +5,9 @@ namespace WebApplication1.idol;
 
 public class IdolService(AppDbContext appDbContext)
 {
-    private readonly AppDbContext _appDbContext = appDbContext;
-
     public async Task<IEnumerable<IdolResponse>> GetIdols()
     {
-        var idols = await _appDbContext.Idols.ToListAsync();
+        var idols = await appDbContext.Idols.ToListAsync();
         var idolsResponse = idols.Select(idol => new IdolResponse(
             idol.Id.ToString(),
             idol.GroupId.ToString(),
@@ -23,7 +21,7 @@ public class IdolService(AppDbContext appDbContext)
 
     public async Task<IEnumerable<IdolResponse>> GetIdolsByGroupId(Guid groupId)
     {
-        var idols = await _appDbContext.Idols.Where(idol => idol.GroupId == groupId).ToListAsync();
+        var idols = await appDbContext.Idols.Where(idol => idol.GroupId == groupId).ToListAsync();
         var idolsResponse = idols.Select(idol => new IdolResponse(
             idol.Id.ToString(),
             idol.GroupId.ToString(),

@@ -1,16 +1,19 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using WebApplication1.comment;
 using WebApplication1.group;
 using WebApplication1.idol;
 using WebApplication1.user;
 
 namespace WebApplication1.shared.infrastructure;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
  public DbSet<Idol> Idols { get; init; }
  public DbSet<Group> Groups { get; init; }
+ public DbSet<Comment> Comments { get; init; }
 
  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
  {
@@ -67,70 +70,84 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
    entity.Property(e => e.Photo).IsRequired();
 
    entity.HasData(
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: aespaId,
-      Name: "Karina",
-      RealName: "Yoo Ji-min",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/krn.jpeg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: aespaId,
-      Name: "Giselle",
-      RealName: "Aeri Uchinaga",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/gs.jpeg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: aespaId,
-      Name: "Winter",
-      RealName: "Kim Min-jeong",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/wt.jpeg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: aespaId,
-      Name: "Ningning",
-      RealName: "Níng Yìzhuó",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/nn.jpeg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: newJeansId,
-      Name: "Minji",
-      RealName: "Kim Min-ji",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_21.jpg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: newJeansId,
-      Name: "Hanni",
-      RealName: "Hanni Pham",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_19.jpg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: newJeansId,
-      Name: "Danielle",
-      RealName: "Danielle June Marsh",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_31-1.jpg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: newJeansId,
-      Name: "Haerin",
-      RealName: "Kang Haerin",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_26-1.jpg"
-      ),
-     new Idol(
-      Id: Guid.NewGuid(),
-      GroupId: newJeansId,
-      Name: "Hyein",
-      RealName: "Lee Hye-in",
-      Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_03.jpg"
-      )
-    );
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: aespaId,
+     Name: "Karina",
+     RealName: "Yoo Ji-min",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/krn.jpeg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: aespaId,
+     Name: "Giselle",
+     RealName: "Aeri Uchinaga",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/gs.jpeg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: aespaId,
+     Name: "Winter",
+     RealName: "Kim Min-jeong",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/wt.jpeg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: aespaId,
+     Name: "Ningning",
+     RealName: "Níng Yìzhuó",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/nn.jpeg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: newJeansId,
+     Name: "Minji",
+     RealName: "Kim Min-ji",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_21.jpg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: newJeansId,
+     Name: "Hanni",
+     RealName: "Hanni Pham",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_19.jpg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: newJeansId,
+     Name: "Danielle",
+     RealName: "Danielle June Marsh",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_31-1.jpg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: newJeansId,
+     Name: "Haerin",
+     RealName: "Kang Haerin",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_26-1.jpg"
+    ),
+    new Idol(
+     Id: Guid.NewGuid(),
+     GroupId: newJeansId,
+     Name: "Hyein",
+     RealName: "Lee Hye-in",
+     Photo: "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_03.jpg"
+    )
+   );
+  });
+
+  modelBuilder.Entity<Comment>(entity =>
+  {
+   entity.HasKey(e => e.Id);
+   entity.HasOne<Group>()
+    .WithMany()
+    .HasForeignKey(e => e.GroupId);
+   entity.HasOne<User>()
+    .WithMany()
+    .HasForeignKey(e => e.AuthorId);
+   entity.Property(e => e.Content).IsRequired();
+   entity.Property(e => e.CreatedAt).IsRequired();
+   entity.Property(e => e.UpdatedAt);
   });
  }
 }

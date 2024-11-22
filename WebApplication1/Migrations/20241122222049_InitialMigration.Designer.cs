@@ -12,8 +12,8 @@ using WebApplication1.shared.infrastructure;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241121172052_AddUserUsername")]
-    partial class AddUserUsername
+    [Migration("20241122222049_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,10 +26,11 @@ namespace WebApplication1.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -52,7 +53,7 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetRoles", "identity");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,9 +67,8 @@ namespace WebApplication1.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -77,7 +77,7 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetRoleClaims", "identity");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,9 +91,8 @@ namespace WebApplication1.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -102,7 +101,7 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetUserClaims", "identity");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -113,9 +112,8 @@ namespace WebApplication1.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -124,13 +122,13 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetUserLogins", "identity");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -139,10 +137,10 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetUserRoles", "identity");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -156,6 +154,37 @@ namespace WebApplication1.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", "identity");
+                });
+
+            modelBuilder.Entity("WebApplication1.comment.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("Comments", "identity");
                 });
 
             modelBuilder.Entity("WebApplication1.group.Group", b =>
@@ -183,14 +212,14 @@ namespace WebApplication1.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7db1befe-4f33-475b-b5c3-286052e4dfb9"),
+                            Id = new Guid("dbce17d4-aee8-4fb9-9951-c689e5a8aa44"),
                             Description = "aespa is a 4-member girl group (Karina, Giselle, Winter, Ningning) from SM Entertainment that debuted on Nov 17th, 2020 with \"Black Mamba.\"\n\nLargely thought to be one of the groups that “started the 4th gen of K-Pop,” aespa is recognized for their theme of AIs and virtual reality. Throughout their album art, lyrics, music videos, and concept films, aespa has established unique lore of their own, drawing inspiration from sub-culture genres such as cyberpunk and frutiger aero, reminiscent of the Y2K trend.\n\naespa’s discography spans a variety of genres - including electronica, synthpop, hyperpop, trap, hiphop, R&B, and more.",
                             Name = "aespa",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/GNEEkD4bgAASBoV.jpg"
                         },
                         new
                         {
-                            Id = new Guid("47c988ee-821d-45c6-88f1-98d98580558a"),
+                            Id = new Guid("ac871e35-16c6-4124-90f4-e78c22d367f6"),
                             Description = "NewJeans is a 5-member girl group (Minji, Hanni, Danielle, Haerin, Hyein) from ADOR that debuted on July 22nd, 2022 with “Attention.” \n\nOne of the most successful groups of the 4th generation of K-Pop, NewJeans is thought to have brought back the “easy listening” genre back to K-Pop, as well as popularizing the visual trend of the “girl next door” and “y2k concept” in the industry. NewJeans is known for their “natural” image; choosing minimalism over maximalism, or the typical level of “hyperproduction” in K-Pop. Super high notes, frantic beat changes, punchy rap verses, and super-synchronized dance routines are mostly absent from NewJeans’ hits.\n\nNewJeans is also loved for their “nostalgic” image and sound, blending mellow mid-tempo pop and R&B sounds with Jersey Club or Balitimore Club genre. Their overall concept has been called reminiscent of groups such as S.E.S, SPEED, and TLC.\n\nNewJeans is considered to be one of the major fashion icons in the K-Pop industry, with their signature “natural” look with minimal makeup and straight black hair which eventually branched out to other trends like balletcore and blokecore, coupled with collaborations with many fashion/beauty brands.",
                             Name = "New Jeans",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/newjeans.jpeg"
@@ -227,72 +256,72 @@ namespace WebApplication1.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("cf1207d4-ec55-4add-9185-3946eee83d30"),
-                            GroupId = new Guid("7db1befe-4f33-475b-b5c3-286052e4dfb9"),
+                            Id = new Guid("7ed381a8-d612-4eb2-a535-2194ccdce8f8"),
+                            GroupId = new Guid("dbce17d4-aee8-4fb9-9951-c689e5a8aa44"),
                             Name = "Karina",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/krn.jpeg",
                             RealName = "Yoo Ji-min"
                         },
                         new
                         {
-                            Id = new Guid("8be39498-4854-44dc-8dea-dbcefb3d42fb"),
-                            GroupId = new Guid("7db1befe-4f33-475b-b5c3-286052e4dfb9"),
+                            Id = new Guid("80cc5465-fcd2-47b5-8e89-682d7bc6eba2"),
+                            GroupId = new Guid("dbce17d4-aee8-4fb9-9951-c689e5a8aa44"),
                             Name = "Giselle",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/gs.jpeg",
                             RealName = "Aeri Uchinaga"
                         },
                         new
                         {
-                            Id = new Guid("88ffa273-3a8f-412d-91be-72d612cb6d19"),
-                            GroupId = new Guid("7db1befe-4f33-475b-b5c3-286052e4dfb9"),
+                            Id = new Guid("7ea37698-fd30-45bb-a9c2-73d4eff5aa3e"),
+                            GroupId = new Guid("dbce17d4-aee8-4fb9-9951-c689e5a8aa44"),
                             Name = "Winter",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/wt.jpeg",
                             RealName = "Kim Min-jeong"
                         },
                         new
                         {
-                            Id = new Guid("7d8b2b22-104c-4aae-92d4-f766e3cd0dcf"),
-                            GroupId = new Guid("7db1befe-4f33-475b-b5c3-286052e4dfb9"),
+                            Id = new Guid("ee0ff8af-a21e-4dcf-b67a-3448f56acecf"),
+                            GroupId = new Guid("dbce17d4-aee8-4fb9-9951-c689e5a8aa44"),
                             Name = "Ningning",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/nn.jpeg",
                             RealName = "Níng Yìzhuó"
                         },
                         new
                         {
-                            Id = new Guid("eee5bda3-d4f1-4b7e-8933-f0e3d08c61f7"),
-                            GroupId = new Guid("47c988ee-821d-45c6-88f1-98d98580558a"),
+                            Id = new Guid("2064191a-84d2-444e-a4a5-07f1779ec367"),
+                            GroupId = new Guid("ac871e35-16c6-4124-90f4-e78c22d367f6"),
                             Name = "Minji",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_21.jpg",
                             RealName = "Kim Min-ji"
                         },
                         new
                         {
-                            Id = new Guid("8af8a85b-6be9-4ed9-8b45-cf846dc0d301"),
-                            GroupId = new Guid("47c988ee-821d-45c6-88f1-98d98580558a"),
+                            Id = new Guid("cbfadc0b-875c-4ad2-b612-a184d9bcbbf9"),
+                            GroupId = new Guid("ac871e35-16c6-4124-90f4-e78c22d367f6"),
                             Name = "Hanni",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_19.jpg",
                             RealName = "Hanni Pham"
                         },
                         new
                         {
-                            Id = new Guid("91f2ce0e-1257-4b3f-ab69-bcf6031a7cce"),
-                            GroupId = new Guid("47c988ee-821d-45c6-88f1-98d98580558a"),
+                            Id = new Guid("d3e4a0d2-7679-4bc5-9b4f-d811ea85a6ad"),
+                            GroupId = new Guid("ac871e35-16c6-4124-90f4-e78c22d367f6"),
                             Name = "Danielle",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_31-1.jpg",
                             RealName = "Danielle June Marsh"
                         },
                         new
                         {
-                            Id = new Guid("25485a8f-efdf-4508-a660-e60edee5806a"),
-                            GroupId = new Guid("47c988ee-821d-45c6-88f1-98d98580558a"),
+                            Id = new Guid("6eda3695-ccc5-42c3-8ec7-da59e80c65ca"),
+                            GroupId = new Guid("ac871e35-16c6-4124-90f4-e78c22d367f6"),
                             Name = "Haerin",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_26-1.jpg",
                             RealName = "Kang Haerin"
                         },
                         new
                         {
-                            Id = new Guid("68527dfa-cdef-4d03-934f-1a6b759cfe8e"),
-                            GroupId = new Guid("47c988ee-821d-45c6-88f1-98d98580558a"),
+                            Id = new Guid("a700cd97-caf2-4dde-84ab-87b381f417a8"),
+                            GroupId = new Guid("ac871e35-16c6-4124-90f4-e78c22d367f6"),
                             Name = "Hyein",
                             Photo = "https://www.ipduck-kpop.wiki/content/images/size/w1600/2024/05/NJ_HowSweet_03.jpg",
                             RealName = "Lee Hye-in"
@@ -301,8 +330,9 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.user.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
@@ -355,10 +385,6 @@ namespace WebApplication1.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<string>("username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -371,16 +397,16 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetUsers", "identity");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("WebApplication1.user.User", null)
                         .WithMany()
@@ -389,7 +415,7 @@ namespace WebApplication1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("WebApplication1.user.User", null)
                         .WithMany()
@@ -398,9 +424,9 @@ namespace WebApplication1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -413,11 +439,26 @@ namespace WebApplication1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("WebApplication1.user.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApplication1.comment.Comment", b =>
+                {
+                    b.HasOne("WebApplication1.user.User", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.group.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
