@@ -13,20 +13,7 @@ public class IdolService(AppDbContext appDbContext)
             idol.GroupId.ToString(),
             idol.Name,
             idol.RealName,
-            idol.Photo
-        )).ToList();
-
-        return idolsResponse;
-    }
-
-    public async Task<IEnumerable<IdolResponse>> GetIdolsByGroupId(Guid groupId)
-    {
-        var idols = await appDbContext.Idols.Where(idol => idol.GroupId == groupId).ToListAsync();
-        var idolsResponse = idols.Select(idol => new IdolResponse(
-            idol.Id.ToString(),
-            idol.GroupId.ToString(),
-            idol.Name,
-            idol.RealName,
+            idol.About,
             idol.Photo
         )).ToList();
 
@@ -41,6 +28,7 @@ public class IdolService(AppDbContext appDbContext)
             idol.GroupId.ToString(),
             idol.Name,
             idol.RealName,
+            idol.About,
             idol.Photo
         );
 
@@ -53,5 +41,6 @@ public record IdolResponse(
     string GroupId,
     string Name,
     string RealName,
+    string About,
     string Photo
 );

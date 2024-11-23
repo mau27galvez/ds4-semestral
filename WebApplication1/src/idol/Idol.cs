@@ -5,5 +5,6 @@ public record Idol(
     Guid GroupId,
     string Name,
     string RealName,
+    string About,
     string Photo
-);
+    );

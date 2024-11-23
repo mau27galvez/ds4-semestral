@@ -40,6 +40,7 @@ public class GroupService(AppDbContext appDbContext)
             idol.GroupId.ToString(),
             idol.Name,
             idol.RealName,
+            idol.About,
             idol.Photo
         )).ToList();
 
@@ -50,6 +51,6 @@ public class GroupService(AppDbContext appDbContext)
 public record GroupResponse(
     string Id,
     string Name,
-    string Description,
+    string About,
     string Photo
 );
