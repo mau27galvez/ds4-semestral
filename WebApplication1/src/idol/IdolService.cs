@@ -32,6 +32,20 @@ public class IdolService(AppDbContext appDbContext)
 
         return idolsResponse;
     }
+
+    public async Task<IdolResponse> GetIdolById(Guid idolId)
+    {
+        var idol = await appDbContext.Idols.Where(idol => idol.Id == idolId).FirstAsync();
+        var idolResponse = new IdolResponse(
+            idol.Id.ToString(),
+            idol.GroupId.ToString(),
+            idol.Name,
+            idol.RealName,
+            idol.Photo
+        );
+
+        return idolResponse;
+    }
 }
 
 public record IdolResponse(

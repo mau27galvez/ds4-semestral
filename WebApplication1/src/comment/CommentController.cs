@@ -6,7 +6,7 @@ namespace WebApplication1.comment;
 [Route("[controller]")]
 public class CommentController(CommentService commentService) : ControllerBase
 {
-    [HttpGet("{groupId:guid}", Name = "GetIdolsByGroupId")]
+    [HttpGet("{groupId:guid}", Name = "GetCommentsByGroupId")]
     public async Task<IEnumerable<CommentResponse>> GetByGroupId(Guid groupId)
     {
         return await commentService.GetCommentsByGroupId(groupId);
