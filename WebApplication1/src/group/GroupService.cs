@@ -51,6 +51,6 @@ public class GroupService(AppDbContext appDbContext)
 public record GroupResponse(
     string Id,
     string Name,
-    string About,
+    string Description,
     string Photo
 );
